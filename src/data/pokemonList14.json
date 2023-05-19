@@ -1,0 +1,16 @@
+[
+	{
+		"id": 10271,
+		"name": "miraidon-glide-mode",
+		"image": null,
+		"hp": 100,
+		"attack": 85,
+		"defense": 100,
+		"special-attack": 135,
+		"special-defense": 115,
+		"speed": 135,
+		"weight": 2400,
+		"height": 28,
+		"types": [13, 16]
+	}
+]
