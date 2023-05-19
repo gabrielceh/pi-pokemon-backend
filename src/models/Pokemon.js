@@ -13,7 +13,7 @@ module.exports = (sequelize) => {
 			type: DataTypes.INTEGER,
 			primaryKey: true,
 			defaultValue: sequelize.literal("nextval('id_pokemon_user_secuence')"),
-			allowNull: true,
+			allowNull: false,
 		},
 		name: {
 			type: DataTypes.STRING,
