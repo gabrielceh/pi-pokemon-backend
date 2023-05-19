@@ -23,7 +23,8 @@ server.use(morgan('dev'));
 // 	res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
 // 	next();
 // });
-const whiteList = ['http://localhost:3000', 'http://localhost:5173'];
+const whiteList =
+	process.env.MODE === 'development' ? ['http://localhost:3000', 'http://localhost:5173'] : [''];
 const corsOptions = {
 	origin: function (origin, callback) {
 		if (!origin || whiteList.indexOf(origin) !== -1) {

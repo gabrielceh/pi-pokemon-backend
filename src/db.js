@@ -10,14 +10,14 @@ const { DB_USER, DB_PASSWORD, DB_HOST, DB_URL, MODE } = process.env;
 // 	native: false, // lets Sequelize know we can use pg-native for ~30% more speed
 // });
 
+const db_conn =
+	MODE === 'production' ? DB_URL : `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/pokemon`;
+
 // produccion
-const sequelize = new Sequelize(
-	MODE === 'production' ? DB_URL : `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/pokemon`,
-	{
-		logging: false, // set to console.log to see the raw SQL queries
-		native: false, // lets Sequelize know we can use pg-native for ~30% more speed
-	}
-);
+const sequelize = new Sequelize(db_conn, {
+	logging: false, // set to console.log to see the raw SQL queries
+	native: false, // lets Sequelize know we can use pg-native for ~30% more speed
+});
 
 const basename = path.basename(__filename);
 
