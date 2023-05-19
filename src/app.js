@@ -26,7 +26,7 @@ server.use(morgan('dev'));
 const whiteList =
 	process.env.MODE === 'development'
 		? ['http://localhost:3000', 'http://localhost:5173']
-		: ['https://pi-pokemon-gabo.netlify.app/'];
+		: ['https://pi-pokemon-gabo.netlify.app'];
 const corsOptions = {
 	origin: function (origin, callback) {
 		if (!origin || whiteList.indexOf(origin) !== -1) {
