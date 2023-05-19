@@ -9,7 +9,7 @@ const getTypesFromApi = async () => {
 	if (response.status >= 400) {
 		throw new CustomError(response.status, response.statusText);
 	}
-	const { results } = await response.json();
+	const { results } = response.data;
 
 	typesToDB = results.map((result) => {
 		const id = result.url.split('/').at(-2);
