@@ -20,6 +20,7 @@ const getPokemonByName = async (res, name, optionsApi, optionsUser) => {
 			},
 			...optionsUser,
 		});
+		console.log(pokemonUserFinded);
 
 		if (pokemonUserFinded) {
 			return res.status(200).json(pokemonUserFinded);
