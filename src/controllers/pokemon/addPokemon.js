@@ -3,6 +3,7 @@ const CustomError = require('../../classes/CustomError');
 const { User, Pokemon, Pokemon_Api } = require('../../db');
 const { optionsUser } = require('../../utils/optionToFindPokemon');
 const { POKE_API_URL, POKEMON_SOURCE } = require('../../utils/pokeApiUrl');
+const { default: axios } = require('axios');
 
 const addPokemon = async (req, res) => {
 	try {
@@ -27,10 +28,12 @@ const addPokemon = async (req, res) => {
 		if (!userFound) throw new CustomError(400, 'User is not in data base');
 
 		const pokemonFinded = await Pokemon.findOne({ where: { name: name.toLowerCase() } });
-		const responseApi = await fetch(`${POKE_API_URL}/${POKEMON_SOURCE}/${name.toLowerCase()}`);
 
-		if (responseApi.status < 300 || pokemonFinded)
+		await axios.get(`${POKE_API_URL}/${POKEMON_SOURCE}/${name.toLowerCase()}`).then((data) => {
 			throw new CustomError(400, `Pokemon '${name}' is already in the data base`);
+		});
+
+		if (pokemonFinded) throw new CustomError(400, `Pokemon '${name}' is already in the data base`);
 
 		const newPokemon = await userFound.createPokemon({
 			name: name.toLowerCase(),

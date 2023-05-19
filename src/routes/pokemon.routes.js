@@ -2,7 +2,6 @@ const router = require('express').Router();
 
 const {
 	addPokemon,
-	addPokemonAdmin,
 	getPokemon,
 	getPokemonById,
 	getUsersPokemon,
@@ -35,7 +34,5 @@ router.put('/', verifyAuthToken, validatePokemonData, validateTypes, updatePokem
 router.delete('/:id', verifyAuthToken, deletePokemon);
 
 router.get('/user/:userId', validationPagination, getPokemonByUser);
-
-router.get('/admin/add-pokemon', addPokemonAdmin);
 
 module.exports = router;

@@ -1,11 +1,12 @@
+const { default: axios } = require('axios');
 const { POKEMON_SOURCE, POKE_API_URL } = require('./pokeApiUrl');
 
 async function getPokemonData(pokemonName) {
-	const response = await fetch(`${POKE_API_URL}/${POKEMON_SOURCE}/${pokemonName}`);
+	const response = await axios.get(`${POKE_API_URL}/${POKEMON_SOURCE}/${pokemonName}`);
 
 	if (response.status >= 400) return { status: response.status };
 
-	const data = await response.json();
+	const { data } = response;
 	let stats = {};
 	for (let stat of data.stats) {
 		if (stat.stat.name.includes('-')) {

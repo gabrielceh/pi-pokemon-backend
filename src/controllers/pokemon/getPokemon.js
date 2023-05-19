@@ -8,6 +8,7 @@ const { getPokemonSlice } = require('../../utils/pokemonSlice');
 const { POKE_API_URL, POKEMON_SOURCE } = require('../../utils/pokeApiUrl');
 const { getPokemonData } = require('../../utils/getPokemonData');
 const { orderPokemonList } = require('../../utils/orderPokemonList');
+const { default: axios } = require('axios');
 
 let pokemonApiList = [];
 
@@ -24,13 +25,13 @@ const getPokemonByName = async (res, name, optionsApi, optionsUser) => {
 			return res.status(200).json(pokemonUserFinded);
 		}
 
-		const responseApi = await fetch(`${POKE_API_URL}/${POKEMON_SOURCE}/${name}`);
+		const dataApi = await axios.get(`${POKE_API_URL}/${POKEMON_SOURCE}/${name}`);
 
-		if (responseApi.status >= 400) {
+		if (dataApi.status >= 400) {
 			throw new CustomError(400, `Pokemon ${name} not found`);
 		}
 
-		const data = await responseApi.json();
+		const { data } = dataApi;
 
 		let stats = {};
 		for (let stat of data.stats) {
@@ -77,10 +78,10 @@ const getAllPokemon = async (res, req, optionsApi, optionsUser) => {
 		const myHost = getMyHost(req);
 
 		if (!pokemonApiList.length) {
-			const apiPokemon = await fetch(
+			const apiPokemon = await axios.get(
 				`${POKE_API_URL}/${POKEMON_SOURCE}/?offset=0&limit=${limitToSearchInApi}`
 			);
-			const { results } = await apiPokemon.json();
+			const { results } = apiPokemon.data;
 
 			pokemonApiList = await Promise.all(results.map((pokemon) => getPokemonData(pokemon.name)));
 		}

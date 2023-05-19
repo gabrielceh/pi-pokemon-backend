@@ -1,3 +1,4 @@
+const { default: axios } = require('axios');
 const { getPokemonData } = require('../../utils/getPokemonData');
 const { limitToSearchInApi } = require('../../utils/optionToFindPokemon');
 const { orderPokemonList } = require('../../utils/orderPokemonList');
@@ -12,10 +13,10 @@ const getApiPokemon = async (req, res) => {
 		let { offset, limit, orderby, ordertype } = req.query;
 
 		if (!pokemonApiList.length) {
-			const apiPokemon = await fetch(
+			const apiPokemon = await axios.get(
 				`${POKE_API_URL}/${POKEMON_SOURCE}/?offset=0&limit=${limitToSearchInApi}`
 			);
-			const { results } = await apiPokemon.json();
+			const { results } = apiPokemon.data;
 
 			pokemonApiList = await Promise.all(results.map((pokemon) => getPokemonData(pokemon.name)));
 		}
