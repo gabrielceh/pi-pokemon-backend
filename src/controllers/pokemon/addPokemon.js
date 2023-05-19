@@ -1,10 +1,11 @@
 const { Op } = require('sequelize');
 const CustomError = require('../../classes/CustomError');
-const { User, Pokemon, Pokemon_Api } = require('../../db');
+const { User, Pokemon } = require('../../db');
 const { optionsUser } = require('../../utils/optionToFindPokemon');
 const { POKE_API_URL, POKEMON_SOURCE } = require('../../utils/pokeApiUrl');
 const { default: axios } = require('axios');
 
+/**Buscamos al pokemon de la pokeapi, si lo encuentra lo retorna, si no, devuelve null */
 const pokemonIsOnApi = async (pokemonName) => {
 	try {
 		const response = await axios.get(
@@ -77,7 +78,7 @@ const addPokemon = async (req, res) => {
 			...optionsUser,
 		});
 
-		res.status(201).json({ success: true, new_pokemon: newPokemon });
+		res.status(201).json({ success: true, new_pokemon: pokemonReturned });
 	} catch (error) {
 		console.log(error);
 		const status = error.status || 500;
