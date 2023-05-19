@@ -26,7 +26,7 @@ const getPokemonByName = async (res, name, optionsApi, optionsUser) => {
 			return res.status(200).json(pokemonUserFinded);
 		}
 
-		const dataApi = await axios.get(`${POKE_API_URL}/${POKEMON_SOURCE}/${name}`);
+		const dataApi = await axios.get(`${POKE_API_URL}/${POKEMON_SOURCE}/${name.toLowerCase()}`);
 
 		if (dataApi.status >= 400) {
 			throw new CustomError(400, `Pokemon ${name} not found`);
