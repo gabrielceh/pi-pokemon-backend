@@ -5,6 +5,22 @@ const { optionsUser } = require('../../utils/optionToFindPokemon');
 const { POKE_API_URL, POKEMON_SOURCE } = require('../../utils/pokeApiUrl');
 const { default: axios } = require('axios');
 
+const pokemonIsOnApi = async (pokemonName) => {
+	try {
+		const response = await axios.get(
+			`${POKE_API_URL}/${POKEMON_SOURCE}/${pokemonName.toLowerCase()}`
+		);
+
+		return response.data;
+	} catch (error) {
+		if (error.response && error.response.status === 404) {
+			// El Pokémon no se encontró en la PokeAPI
+			return null;
+		}
+		throw new CustomError(error.response.status, error.response.data);
+	}
+};
+
 const addPokemon = async (req, res) => {
 	try {
 		const {
@@ -22,6 +38,7 @@ const addPokemon = async (req, res) => {
 		} = req.body;
 
 		const userId = req.userId;
+		console.log(name);
 
 		const userFound = await User.findByPk(userId);
 
@@ -29,11 +46,11 @@ const addPokemon = async (req, res) => {
 
 		const pokemonFinded = await Pokemon.findOne({ where: { name: name.toLowerCase() } });
 
-		await axios.get(`${POKE_API_URL}/${POKEMON_SOURCE}/${name.toLowerCase()}`).then((data) => {
-			throw new CustomError(400, `Pokemon '${name}' is already in the data base`);
-		});
+		// const response = await axios.get(`${POKE_API_URL}/${POKEMON_SOURCE}/${name.toLowerCase()}`);
+		const response = await pokemonIsOnApi(name.toLowerCase());
 
-		if (pokemonFinded) throw new CustomError(400, `Pokemon '${name}' is already in the data base`);
+		if (pokemonFinded || response !== null)
+			throw new CustomError(400, `Pokemon '${name}' is already in the data base`);
 
 		const newPokemon = await userFound.createPokemon({
 			name: name.toLowerCase(),
@@ -60,8 +77,9 @@ const addPokemon = async (req, res) => {
 			...optionsUser,
 		});
 
-		res.status(201).json({ success: true, new_pokemon: pokemonReturned });
+		res.status(201).json({ success: true, new_pokemon: newPokemon });
 	} catch (error) {
+		console.log(error);
 		const status = error.status || 500;
 		res.status(status).json({ error: error.message });
 	}

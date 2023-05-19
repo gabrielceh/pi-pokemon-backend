@@ -4,6 +4,8 @@ const { POKEMON_SOURCE, POKE_API_URL } = require('./pokeApiUrl');
 async function getPokemonData(pokemonName) {
 	const response = await axios.get(`${POKE_API_URL}/${POKEMON_SOURCE}/${pokemonName}`);
 
+	console.log(response);
+
 	if (response.status >= 400) return { status: response.status };
 
 	const { data } = response;
