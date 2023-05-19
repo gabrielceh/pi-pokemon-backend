@@ -117,18 +117,16 @@ module.exports = (sequelize) => {
 			},
 		},
 		height: {
-			type: {
-				type: DataTypes.FLOAT,
-				defaultValue: 1,
-				validate: {
-					min: {
-						args: [1],
-						msg: 'Min height should be 1',
-					},
-					max: {
-						args: [999],
-						msg: 'Max height should be 999',
-					},
+			type: DataTypes.FLOAT,
+			defaultValue: 1,
+			validate: {
+				min: {
+					args: [1],
+					msg: 'Min height should be 1',
+				},
+				max: {
+					args: [999],
+					msg: 'Max height should be 999',
 				},
 			},
 		},
