@@ -175,7 +175,6 @@ const typeFilterById = async (req, res) => {
 			.status(200)
 			.json({ count, next, prev, name: foundedType.dataValues.name, results: dataList });
 	} catch (error) {
-		console.log(error);
 		const status = error.status || 500;
 		res.status(status).json({ error: error.message });
 	}

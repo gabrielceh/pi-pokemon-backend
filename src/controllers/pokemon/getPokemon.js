@@ -12,7 +12,7 @@ const { default: axios } = require('axios');
 
 let pokemonApiList = [];
 
-const getPokemonByName = async (res, name, optionsApi, optionsUser) => {
+const getPokemonByName = async (res, name, optionsUser) => {
 	try {
 		const pokemonUserFinded = await Pokemon.findOne({
 			where: {
@@ -20,55 +20,26 @@ const getPokemonByName = async (res, name, optionsApi, optionsUser) => {
 			},
 			...optionsUser,
 		});
-		console.log(pokemonUserFinded);
 
 		if (pokemonUserFinded) {
 			return res.status(200).json(pokemonUserFinded);
 		}
 
-		const dataApi = await axios.get(`${POKE_API_URL}/${POKEMON_SOURCE}/${name.toLowerCase()}`);
+		// const dataApi = await axios.get(`${POKE_API_URL}/${POKEMON_SOURCE}/${name.toLowerCase()}`);
+		const dataApi = await getPokemonData(name.toLowerCase());
 
 		if (dataApi.status >= 400) {
-			throw new CustomError(400, `Pokemon ${name} not found`);
+			throw new CustomError(400, `Pokemon '${name}' not found`);
 		}
 
-		const { data } = dataApi;
-
-		let stats = {};
-		for (let stat of data.stats) {
-			if (stat.stat.name.includes('-')) {
-				stats[stat.stat.name.replace('-', '_')] = stat.base_stat;
-			} else {
-				stats[stat.stat.name] = stat.base_stat;
-			}
-		}
-
-		let types = [];
-
-		for (let type of data.types) {
-			let id = type.type.url.split('/').at(-2);
-			let name = type.type.name;
-			types.push({ id: +id, name });
-		}
-
-		const pokemon = {
-			id: data.id,
-			name: data.name,
-			image: data.sprites.other['official-artwork'].front_default,
-			...stats,
-			weight: data.weight,
-			height: data.height,
-			Types: types,
-		};
-
-		return res.status(200).json(pokemon);
+		return res.status(200).json(dataApi);
 	} catch (error) {
 		const status = error.status || 500;
 		res.status(status).json({ error: error.message });
 	}
 };
 
-const getAllPokemon = async (res, req, optionsApi, optionsUser) => {
+const getAllPokemon = async (res, req, optionsUser) => {
 	/**Obtine los pokemos originales de la db y los pokemon creados por los usuarios
 	 * Los ordena mediante la funcion orderPokemonList
 	 * Realiza la paginacion
@@ -119,9 +90,9 @@ const getPokemon = (req, res) => {
 	let { name } = req.query;
 
 	if (name) {
-		return getPokemonByName(res, name, optionsApi, optionsUser);
+		return getPokemonByName(res, name, optionsUser);
 	} else {
-		return getAllPokemon(res, req, optionsApi, optionsUser);
+		return getAllPokemon(res, req, optionsUser);
 	}
 };
 

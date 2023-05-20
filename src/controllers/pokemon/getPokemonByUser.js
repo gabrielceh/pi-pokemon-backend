@@ -23,7 +23,7 @@ const getPokemonByUser = async (req, res) => {
 		});
 
 		offset = offset ? +offset : 0;
-		limit = limit ? +limit : 12;
+		limit = limit ? +limit : 6;
 
 		let pokemonData = [...pokemonByUser];
 
@@ -38,13 +38,12 @@ const getPokemonByUser = async (req, res) => {
 			pokemonData,
 			offset,
 			limit,
-			`pokemon/user/${userId}`,
+			`pokemon-api/pokemon/user/${userId}`,
 			orderString
 		);
 
 		res.status(200).json({ count, next, prev, results: dataList });
 	} catch (error) {
-		console.log(error);
 		const status = error.status || 500;
 		res.status(status).json({ error: error.message });
 	}

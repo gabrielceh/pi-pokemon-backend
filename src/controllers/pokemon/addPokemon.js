@@ -39,7 +39,6 @@ const addPokemon = async (req, res) => {
 		} = req.body;
 
 		const userId = req.userId;
-		console.log(name);
 
 		const userFound = await User.findByPk(userId);
 
@@ -80,7 +79,6 @@ const addPokemon = async (req, res) => {
 
 		res.status(201).json({ success: true, new_pokemon: pokemonReturned });
 	} catch (error) {
-		console.log(error);
 		const status = error.status || 500;
 		res.status(status).json({ error: error.message });
 	}

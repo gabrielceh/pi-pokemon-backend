@@ -15,9 +15,7 @@ async function getAllPokemon() {
 		// nextUrl = data.next;
 		// }
 		return pokemonList;
-	} catch (error) {
-		console.log(error);
-	}
+	} catch (error) {}
 }
 
 async function getPokemonData(pokemonName) {
@@ -49,7 +47,6 @@ async function getPokemonData(pokemonName) {
 		height: data.height,
 		types: types,
 	};
-	console.log('add:' + pokemon.name, 'types:', types);
 
 	return pokemon;
 }
