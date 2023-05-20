@@ -9,11 +9,16 @@ const { POKE_API_URL, POKEMON_SOURCE } = require('../../utils/pokeApiUrl');
 const { getPokemonData } = require('../../utils/getPokemonData');
 const { orderPokemonList } = require('../../utils/orderPokemonList');
 const { default: axios } = require('axios');
+const { NAME_REGEX } = require('../../utils/regex');
 
 let pokemonApiList = [];
 
 const getPokemonByName = async (res, name, optionsUser) => {
 	try {
+		if (!NAME_REGEX.test(name)) {
+			return res.status(400).json({ error: `'${name}' is not a valid name` });
+		}
+
 		const pokemonUserFinded = await Pokemon.findOne({
 			where: {
 				name: name.toLowerCase(),
