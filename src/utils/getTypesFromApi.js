@@ -3,24 +3,25 @@ const CustomError = require('../classes/CustomError');
 const { POKE_API_URL, TYPE_SOURCE } = require('./pokeApiUrl');
 
 const getTypesFromApi = async () => {
-	let typesToDB = [];
+	try {
+		let typesToDB = [];
 
-	const response = await axios(`${POKE_API_URL}/${TYPE_SOURCE}`);
-	if (response.status >= 400) {
-		throw new CustomError(response.status, response.statusText);
+		const response = await axios(`${POKE_API_URL}/${TYPE_SOURCE}`);
+		const { results } = response.data;
+
+		typesToDB = results.map((result) => {
+			const id = result.url.split('/').at(-2);
+
+			return {
+				id,
+				name: result.name,
+			};
+		});
+
+		return typesToDB;
+	} catch (error) {
+		return { status: error.response.status };
 	}
-	const { results } = response.data;
-
-	typesToDB = results.map((result) => {
-		const id = result.url.split('/').at(-2);
-
-		return {
-			id,
-			name: result.name,
-		};
-	});
-
-	return typesToDB;
 };
 
 module.exports = {

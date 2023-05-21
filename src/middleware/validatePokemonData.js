@@ -1,5 +1,6 @@
 const CustomError = require('../classes/CustomError');
 const { Types } = require('../db');
+const { NAME_REGEX } = require('../utils/regex');
 
 const validatePokemonData = (req, res, next) => {
 	try {
@@ -34,6 +35,13 @@ const validatePokemonData = (req, res, next) => {
 			throw new CustomError(
 				400,
 				'The following data is required: name, hp, attack, defense, special attack, special defense, speed, types'
+			);
+		}
+
+		if (!NAME_REGEX.test(name)) {
+			throw new CustomError(
+				400,
+				`'${name}' is no valid. Must start with a letter, and only midscore and underscore are accepted`
 			);
 		}
 

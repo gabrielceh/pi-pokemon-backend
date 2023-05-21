@@ -92,6 +92,11 @@ const getTypes = async (req, res) => {
 
 		if (!allTypes.length) {
 			const typesFromApi = await getTypesFromApi();
+
+			if (typesFromApi.status >= 400) {
+				throw new CustomError(response.status, response.statusText);
+			}
+
 			const newTypes = await Types.bulkCreate(typesFromApi);
 			typeToReturn = newTypes.map((type) => {
 				return {
