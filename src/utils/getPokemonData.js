@@ -7,7 +7,6 @@ async function getPokemonData(pokemonName) {
 		const response = await axios.get(`${POKE_API_URL}/${POKEMON_SOURCE}/${pokemonName}`);
 
 		const { data } = response;
-		console.log(data);
 		let stats = {};
 		for (let stat of data.stats) {
 			if (stat.stat.name.includes('-')) {
