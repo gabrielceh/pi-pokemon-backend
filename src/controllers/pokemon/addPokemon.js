@@ -4,23 +4,24 @@ const { User, Pokemon } = require('../../db');
 const { optionsUser } = require('../../utils/optionToFindPokemon');
 const { POKE_API_URL, POKEMON_SOURCE } = require('../../utils/pokeApiUrl');
 const { default: axios } = require('axios');
+const { getPokemonData } = require('../../utils/getPokemonData');
 
 /**Buscamos al pokemon de la pokeapi, si lo encuentra lo retorna, si no, devuelve null */
-const pokemonIsOnApi = async (pokemonName) => {
-	try {
-		const response = await axios.get(
-			`${POKE_API_URL}/${POKEMON_SOURCE}/${pokemonName.toLowerCase()}`
-		);
+// const pokemonIsOnApi = async (pokemonName) => {
+// 	try {
+// 		const response = await axios.get(
+// 			`${POKE_API_URL}/${POKEMON_SOURCE}/${pokemonName.toLowerCase()}`
+// 		);
 
-		return response.data;
-	} catch (error) {
-		if (error.response && error.response.status === 404) {
-			// El Pokémon no se encontró en la PokeAPI
-			return null;
-		}
-		throw new CustomError(error.response.status, error.response.data);
-	}
-};
+// 		return response.data;
+// 	} catch (error) {
+// 		if (error.response && error.response.status === 404) {
+// 			// El Pokémon no se encontró en la PokeAPI
+// 			return null;
+// 		}
+// 		throw new CustomError(error.response.status, error.response.data);
+// 	}
+// };
 
 const addPokemon = async (req, res) => {
 	try {
@@ -47,9 +48,9 @@ const addPokemon = async (req, res) => {
 		const pokemonFinded = await Pokemon.findOne({ where: { name: name.toLowerCase() } });
 
 		// const response = await axios.get(`${POKE_API_URL}/${POKEMON_SOURCE}/${name.toLowerCase()}`);
-		const response = await pokemonIsOnApi(name.toLowerCase());
+		const response = await getPokemonData(name.toLowerCase());
 
-		if (pokemonFinded || response !== null)
+		if (pokemonFinded || response.name)
 			throw new CustomError(400, `Pokemon '${name}' is already in the data base`);
 
 		const newPokemon = await userFound.createPokemon({

@@ -35,9 +35,9 @@ const validateLogin = (req, res, next) => {
 			throw new CustomError(400, 'Please, send email and password');
 		}
 
-		if (!EMAIL_REGEX.test(email)) {
-			throw new CustomError(400, 'Email or Password not valid');
-		}
+		// if (!EMAIL_REGEX.test(email)) {
+		// 	throw new CustomError(400, 'Email or Password not valid');
+		// }
 
 		next();
 	} catch (error) {
