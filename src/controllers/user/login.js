@@ -12,8 +12,6 @@ const login = async (req, res) => {
 			where: { [Op.or]: [{ email: email.toLowerCase() }, { userName: email }] },
 		});
 
-		console.log(user);
-
 		if (!user) {
 			throw new CustomError(400, 'Email or Password not valid');
 		}
