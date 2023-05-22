@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { Sequelize } = require('sequelize');
 const { createSequence } = require('./utils/createSequence');
+const { runMigration } = require('./utils/runMigration');
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_URL, NODE_ENV } = process.env;
 
 // development
@@ -47,12 +48,9 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { Pokemon, Types, Pokemon_Api, User, Blacklist, Sequence } = sequelize.models;
+const { Pokemon, Types, Pokemon_Api, User, Blacklist } = sequelize.models;
 
-// Define un modelo para la secuencia
-// Función para verificar y crear la secuencia
-// Ejecuta la función para crear la secuencia
-createSequence(Sequence);
+runMigration(sequelize, createSequence);
 
 // Aca vendrian las relaciones
 // Product.hasMany(Reviews);
