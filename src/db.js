@@ -1,8 +1,9 @@
 require('dotenv').config();
-const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_URL, MODE } = process.env;
+const { Sequelize } = require('sequelize');
+const { createSequence } = require('./utils/createSequence');
+const { DB_USER, DB_PASSWORD, DB_HOST, DB_URL, NODE_ENV } = process.env;
 
 // development
 // const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/pokemon`, {
@@ -11,12 +12,19 @@ const { DB_USER, DB_PASSWORD, DB_HOST, DB_URL, MODE } = process.env;
 // });
 
 const db_conn =
-	MODE === 'production' ? DB_URL : `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/pokemon`;
+	NODE_ENV === 'production' ? DB_URL : `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/pokemon`;
+
+const dialectOptions = NODE_ENV === 'production' && {
+	ssl: {
+		require: true,
+	},
+};
 
 // produccion
 const sequelize = new Sequelize(db_conn, {
 	logging: false, // set to console.log to see the raw SQL queries
 	native: false, // lets Sequelize know we can use pg-native for ~30% more speed
+	dialectOptions: dialectOptions, // deploy render
 });
 
 const basename = path.basename(__filename);
@@ -39,7 +47,12 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { Pokemon, Types, Pokemon_Api, User, Blacklist } = sequelize.models;
+const { Pokemon, Types, Pokemon_Api, User, Blacklist, Sequence } = sequelize.models;
+
+// Define un modelo para la secuencia
+// Función para verificar y crear la secuencia
+// Ejecuta la función para crear la secuencia
+createSequence(Sequence);
 
 // Aca vendrian las relaciones
 // Product.hasMany(Reviews);

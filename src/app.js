@@ -23,10 +23,9 @@ server.use(morgan('dev'));
 // 	res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
 // 	next();
 // });
-const whiteList =
-	process.env.MODE === 'development'
-		? ['http://localhost:3000', 'http://localhost:5173']
-		: ['https://pi-pokemon-gabo.netlify.app'];
+
+const whiteList = [process.env.WHITHE_LIST];
+
 const corsOptions = {
 	origin: function (origin, callback) {
 		if (!origin || whiteList.indexOf(origin) !== -1) {
